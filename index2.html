@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subwarden Application Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0891b2 50%, #059669 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .main-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #1e3a8a, #0891b2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #1e3a8a, #0891b2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sponsor-logos {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .powered-by-text {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .sponsor-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .respublica-logo {
+            height: 45px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .uct-logo {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sponsor-logo-container:hover .respublica-logo,
+        .sponsor-logo-container:hover .uct-logo {
+            transform: scale(1.05);
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 35px;
+            background: linear-gradient(to bottom, transparent, #0891b2, transparent);
+        }
+
+        .application-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .application-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .application-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .application-header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            gap: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #0891b2, #059669);
+            color: white;
+        }
+
+        .step.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .step.inactive {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0891b2;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .file-upload-area {
+            border: 3px dashed #d1d5db;
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .file-upload-area:hover {
+            border-color: #0891b2;
+            background: rgba(8, 145, 178, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: #059669;
+            background: rgba(5, 150, 105, 0.1);
+            transform: scale(1.02);
+        }
+
+        .file-upload-icon {
+            font-size: 4rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            color: #374151;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-subtext {
+            color: #6b7280;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .file-upload-button {
+            background: linear-gradient(135deg, #0891b2, #059669);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(8, 145, 178, 0.3);
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0891b2, #059669);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #374151;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .file-size {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .processing-indicator {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .extraction-results {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .extraction-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .extraction-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0891b2;
+        }
+
+        .validation-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .extracted-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .data-section {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #0891b2;
+        }
+
+        .data-section h4 {
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .data-field {
+            margin-bottom: 1rem;
+        }
+
+        .data-label {
+            font-weight: 500;
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .data-value {
+            color: #374151;
+            font-size: 1rem;
+            background: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .edit-button {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-button:hover {
+            background: #e5e7eb;
+        }
+
+        .validation-panel {
+            background: #eff6ff;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .validation-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .validation-title {
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .validation-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0 0 0;
+        }
+
+        .validation-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0;
+            background: #f9fafb;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .validation-item:hover {
+            background: #f3f4f6;
+        }
+
+        .validation-icon {
+            margin-right: 0.75rem;
+            font-size: 1.1em;
+        }
+
+        .validation-status {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-warning {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0891b2;
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .file-requirements {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 1rem;
+            font-style: italic;
+            text-align: center;
+            background: rgba(8, 145, 178, 0.05);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #0891b2;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .sponsor-logos {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .application-container {
+                padding: 2rem 1.5rem;
+                margin: 0 0.5rem;
+            }
+
+            .application-header h1 {
+                font-size: 2rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .extracted-data {
+                grid-template-columns: 1fr;
+            }
+
+            .step-indicator {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="main-logo">
+                <div class="page-icon">📋</div>
+                <div class="page-title">Subwarden Application Portal</div>
+            </div>
+            <div class="sponsor-logos">
+                <span class="powered-by-text">Powered by:</span>
+                <div class="sponsor-logo-container">
+                    <!-- Respublica Student Living Logo -->
+                    <svg class="respublica-logo" viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(20, 20)">
+                            <rect x="0" y="0" width="25" height="25" rx="6" fill="#1e3a8a"/>
+                            <path d="M3 15 L12 8 L21 15 L12 22 Z" fill="#a855f7"/>
+                            <rect x="30" y="0" width="25" height="25" rx="6" fill="#0891b2"/>
+                            <path d="M32 3 L53 22 M53 3 L32 22" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                            <rect x="60" y="0" width="25" height="25" rx="6" fill="#0ea5e9"/>
+                            <rect x="65" y="5" width="15" height="15" rx="2" fill="#fbbf24"/>
+                            <rect x="0" y="30" width="25" height="25" rx="6" fill="#0891b2"/>
+                            <path d="M5 40 L10 35 L15 40 L20 35 L20 50 L5 50 Z" fill="#fbbf24"/>
+                            <rect x="30" y="30" width="25" height="25" rx="6" fill="#a3e635"/>
+                            <path d="M32 32 L53 53 M32 43 L43 32 L53 43" stroke="#0891b2" stroke-width="2.5" stroke-linecap="round"/>
+                            <rect x="0" y="60" width="25" height="25" rx="6" fill="#0f766e"/>
+                            <circle cx="12.5" cy="72.5" r="8" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path d="M12.5 67 L12.5 78 M7 72.5 L18 72.5" stroke="#ffffff" stroke-width="2"/>
+                            <rect x="30" y="60" width="25" height="25" rx="6" fill="#0891b2"/>
+                            <path d="M35 65 L42.5 78 L50 65" fill="#ef4444" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+                        </g>
+                        <text x="120" y="45" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#0891b2">RESPUBLICA</text>
+                        <text x="120" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="normal" fill="#0891b2" letter-spacing="3px">STUDENT LIVING</text>
+                    </svg>
+
+                    <div class="logo-divider"></div>
+
+                    <!-- UCT Logo -->
+                    <svg class="uct-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="60" r="58" fill="none" stroke="#0891b2" stroke-width="2"/>
+                        <defs>
+                            <path id="top-arc" d="M 8,60 A 52,52 0 0,1 112,60"/>
+                            <path id="bottom-arc" d="M 112,60 A 52,52 0 0,1 8,60"/>
+                        </defs>
+                        <text font-family="Arial, sans-serif" font-size="7" fill="#0891b2" font-weight="600">
+                            <textPath href="#top-arc" startOffset="10%">University of Cape Town</textPath>
+                        </text>
+                        <text font-family="Arial, sans-serif" font-size="7" fill="#0891b2" font-weight="600" text-anchor="middle">
+                            <textPath href="#bottom-arc" startOffset="90%">iYunivesithi yaseKapa</textPath>
+                        </text>
+                        <path d="M60 15 L45 25 L45 70 Q45 85 60 95 Q75 85 75 70 L75 25 Z" fill="#1e3a8a" stroke="#0891b2" stroke-width="1"/>
+                        <path d="M52 20 L56 18 L60 20 L64 18 L68 20 L68 25 L52 25 Z" fill="#fbbf24"/>
+                        <circle cx="54" cy="22" r="1" fill="#fff"/>
+                        <circle cx="60" cy="22" r="1" fill="#fff"/>
+                        <circle cx="66" cy="22" r="1" fill="#fff"/>
+                        <rect x="52" y="40" width="16" height="12" fill="#ffffff"/>
+                        <line x1="52" y1="43" x2="68" y2="43" stroke="#0891b2" stroke-width="0.5"/>
+                        <line x1="52" y1="46" x2="68" y2="46" stroke="#0891b2" stroke-width="0.5"/>
+                        <line x1="52" y1="49" x2="68" y2="49" stroke="#0891b2" stroke-width="0.5"/>
+                        <text x="60" y="47" font-family="Arial, sans-serif" font-size="6" text-anchor="middle" fill="#0891b2" font-weight="bold">SPES</text>
+                        <text x="60" y="51" font-family="Arial, sans-serif" font-size="6" text-anchor="middle" fill="#0891b2" font-weight="bold">BONA</text>
+                        <path d="M60 55 L60 75 M52 70 Q52 75 60 75 Q68 75 68 70 M55 58 L65 58" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <circle cx="60" cy="58" r="3" fill="none" stroke="#ffffff" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="application-container">
+        <div class="application-header">
+            <h1>Subwarden Application</h1>
+            <p>Upload your documents and complete your application to apply for the Subwarden position</p>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step active" id="step-1">
+                <span>1️⃣</span>
+                <span>Upload Documents</span>
+            </div>
+            <div class="step inactive" id="step-2">
+                <span>2️⃣</span>
+                <span>Validate Information</span>
+            </div>
+            <div class="step inactive" id="step-3">
+                <span>3️⃣</span>
+                <span>Complete Application</span>
+            </div>
+        </div>
+
+        <form id="applicationForm">
+            <!-- Step 1: Document Upload -->
+            <div class="form-step active" id="step1-content">
+                <h2 class="section-title">Upload Your Documents</h2>
+                
+                <!-- CV Upload -->
+                <div class="file-upload-container">
+                    <label class="form-label">Curriculum Vitae (CV) <span class="required">*</span></label>
+                    <div class="file-upload-area" id="cv-upload-area">
+                        <div class="file-upload-icon">📄</div>
+                        <div class="file-upload-text">Upload your CV first</div>
+                        <div class="file-upload-subtext">We'll extract your information automatically to speed up the process</div>
+                        <button type="button" class="file-upload-button" onclick="document.getElementById('cv-input').click()">
+                            Choose CV File
+                        </button>
+                        <input type="file" id="cv-input" name="cv" accept=".pdf,.doc,.docx" style="display: none;" required>
+                    </div>
+                    <div id="cv-file-list"></div>
+                    <div class="file-requirements">
+                        <strong>Requirements:</strong> PDF, DOC, or DOCX format • Maximum file size: 5MB
+                    </div>
+                </div>
+
+                <!-- Motivation Letter Upload -->
+                <div class="file-upload-container">
+                    <label class="form-label">Motivation Letter <span class="required">*</span></label>
+                    <div class="file-upload-area" id="motivation-upload-area">
+                        <div class="file-upload-icon">📝</div>
+                        <div class="file-upload-text">Upload your Motivation Letter</div>
+                        <div class="file-upload-subtext">Tell us why you're perfect for this position</div>
+                        <button type="button" class="file-upload-button" onclick="document.getElementById('motivation-input').click()">
+                            Choose Motivation Letter
+                        </button>
+                        <input type="file" id="motivation-input" name="motivationLetter" accept=".pdf,.doc,.docx" style="display: none;" required>
+                    </div>
+                    <div id="motivation-file-list"></div>
+                    <div class="file-requirements">
+                        <strong>Requirements:</strong> PDF, DOC, or DOCX format • Maximum file size: 5MB
+                    </div>
+                </div>
+
+                <!-- Processing Indicator -->
+                <div id="processing-indicator" class="processing-indicator" style="display: none;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                        <div class="spinner" style="width: 20px; height: 20px; border: 2px solid #f59e0b; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        <span>Processing documents and extracting information...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Data Validation -->
+            <div class="form-step" id="step2-content">
+                <h2 class="section-title">Validate Extracted Information</h2>
+                
+                <div id="extraction-results" class="extraction-results" style="display: none;">
+                    <div class="extraction-header">
+                        <div class="extraction-title">📊 Extracted Information</div>
+                        <div class="validation-status status-success" id="validation-status">
+                            ✅ Information successfully extracted
+                        </div>
+                    </div>
+
+                    <div class="extracted-data">
+                        <!-- Personal Information -->
+                        <div class="data-section">
+                            <h4>Personal Information</h4>
+                            <div class="data-field">
+                                <div class="data-label">Full Name</div>
+                                <div class="data-value" id="extracted-name">--</div>
+                            </div>
+                            <div class="data-field">
+                                <div class="data-label">Email Address</div>
+                                <div class="data-value" id="extracted-email">--</div>
+                            </div>
+                            <div class="data-field">
+                                <div class="data-label">Phone Number</div>
+                                <div class="data-value" id="extracted-phone">--</div>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="data-section">
+                            <h4>Professional Information</h4>
+                            <div class="data-field">
+                                <div class="data-label">Current Position/Student Status</div>
+                                <div class="data-value" id="extracted-current-role">--</div>
+                            </div>
+                            <div class="data-field">
+                                <div class="data-label">Education</div>
+                                <div class="data-value" id="extracted-education">--</div>
+                            </div>
+                            <div class="data-field">
+                                <div class="data-label">Skills</div>
+                                <div class="data-value" id="extracted-skills">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="validation-panel">
+                        <div class="validation-header">
+                            <span>🔍</span>
+                            <span class="validation-title">Validation Checklist</span>
+                        </div>
+                        <ul class="validation-list" id="validation-checklist">
+                            <!-- Validation items will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Final Application -->
+            <div class="form-step" id="step3-content">
+                <h2 class="section-title">Complete Your Application</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Position Applied For <span class="required">*</span></label>
+                    <select name="position" required class="form-input" id="position-select">
+                        <option value="">Select position</option>
+                        <option value="student-assistant">Student Assistant</option>
+                        <option value="marketing-intern">Marketing Intern</option>
+                        <option value="admin-assistant">Administrative Assistant</option>
+                        <option value="tutor">Tutor</option>
+                        <option value="research-assistant">Research Assistant</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Add any other fields from step 3 here -->
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const API_BASE_URL = 'http://localhost:8000'; // Your Python backend URL
+
+        // --- DOM ELEMENTS ---
+        const form = document.getElementById('applicationForm');
+        const cvInput = document.getElementById('cv-input');
+        const cvUploadArea = document.getElementById('cv-upload-area');
+        const processingIndicator = document.getElementById('processing-indicator');
+        const extractionResults = document.getElementById('extraction-results');
+        const nextBtn = document.querySelector('.btn-primary'); // Assuming it's the only one initially
+
+        let currentStep = 1;
+        let extractedData = {}; // To store data from the CV
+
+        // --- FILE UPLOAD LOGIC ---
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadAndProcessCV(file);
+            }
+        }
+
+        cvInput.addEventListener('change', handleFileSelect);
+        
+        // Drag and Drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            cvUploadArea.addEventListener(eventName, e => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+        cvUploadArea.addEventListener('dragover', () => cvUploadArea.classList.add('dragover'));
+        cvUploadArea.addEventListener('dragleave', () => cvUploadArea.classList.remove('dragover'));
+        cvUploadArea.addEventListener('drop', e => {
+            cvUploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                uploadAndProcessCV(file);
+            }
+        });
+
+
+        async function uploadAndProcessCV(file) {
+            processingIndicator.style.display = 'block';
+            extractionResults.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('cv', file); // 'cv' must match the backend parameter name
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/parse-cv`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to parse CV.');
+                }
+
+                extractedData = await response.json();
+                populateValidationStep(extractedData);
+                
+                // Move to the next step
+                goToStep(2);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`An error occurred: ${error.message}`);
+            } finally {
+                processingIndicator.style.display = 'none';
+            }
+        }
+
+        // --- UI UPDATE LOGIC ---
+        function populateValidationStep(data) {
+            // Update personal information
+            if (data.personal_info) {
+                document.getElementById('extracted-name').textContent = data.personal_info.name || 'Not found';
+                document.getElementById('extracted-email').textContent = data.personal_info.email || 'Not found';
+                document.getElementById('extracted-phone').textContent = data.personal_info.phone || 'Not found';
+            }
+            
+            // Update professional information
+            if (data.professional_info) {
+                document.getElementById('extracted-current-role').textContent = data.professional_info.current_role || 'Not found';
+                document.getElementById('extracted-education').textContent = data.professional_info.education || 'Not found';
+                document.getElementById('extracted-skills').textContent = data.professional_info.skills ? 
+                    data.professional_info.skills.join(', ') : 'Not found';
+            }
+            
+            // Update validation checklist
+            const validationItems = [
+                { id: 'check-name', condition: data.personal_info?.name, label: 'Name extracted' },
+                { id: 'check-email', condition: data.personal_info?.email, label: 'Email address found' },
+                { id: 'check-education', condition: data.professional_info?.education, label: 'Education history found' },
+                { id: 'check-skills', condition: data.professional_info?.skills?.length > 0, label: 'Skills identified' }
+            ];
+            
+            const checklist = document.getElementById('validation-checklist');
+            checklist.innerHTML = validationItems.map(item => `
+                <li class="validation-item" id="${item.id}">
+                    <span class="validation-icon">${item.condition ? '✅' : '❌'}</span>
+                    <span>${item.label}</span>
+                </li>
+            `).join('');
+            
+            extractionResults.style.display = 'block';
+        }
+        
+        function goToStep(stepNumber) {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep}-content`).classList.remove('active');
+
+            currentStep = stepNumber;
+
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById(`step${currentStep}-content`).classList.add('active');
+        }
+
+        // --- FORM SUBMISSION LOGIC ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (currentStep !== 3) return; // Only submit on the last step
+
+            const finalFormData = {
+                extracted_info: extractedData,
+                position_applied: document.getElementById('position-select').value,
+                // Add any other fields from step 3 here
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/submit-application`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalFormData),
+                });
+
+                if (!response.ok) throw new Error('Submission failed');
+
+                const result = await response.json();
+                alert(result.message);
+                form.reset();
+                goToStep(1); // Go back to the first step
+
+            } catch (error) {
+                console.error('Submission Error:', error);
+                alert('There was an error submitting your application.');
+            }
+        });
+
+        // --- NAVIGATION BUTTONS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation buttons
+            const prevBtn = document.createElement('button');
+            prevBtn.type = 'button';
+            prevBtn.className = 'btn btn-secondary';
+            prevBtn.textContent = 'Previous';
+            prevBtn.style.marginRight = '10px';
+            prevBtn.onclick = () => {
+                if (currentStep > 1) {
+                    goToStep(currentStep - 1);
+                }
+            };
+
+            const nextBtn = document.createElement('button');
+            nextBtn.type = 'button';
+            nextBtn.className = 'btn btn-primary';
+            nextBtn.textContent = 'Next';
+            nextBtn.onclick = () => {
+                if (currentStep < 3) {
+                    // Add step validation here if needed
+                    goToStep(currentStep + 1);
+                } else {
+                    form.requestSubmit();
+                }
+            };
+
+            // Add navigation buttons container
+            const navContainer = document.createElement('div');
+            navContainer.className = 'form-navigation';
+            navContainer.style.marginTop = '2rem';
+            navContainer.style.display = 'flex';
+            navContainer.style.justifyContent = 'flex-end';
+            
+            navContainer.appendChild(prevBtn);
+            navContainer.appendChild(nextBtn);
+            
+            // Add navigation to each step
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.appendChild(navContainer.cloneNode(true));
+            });
+            
+            // Initialize first step
+            goToStep(1);
+        });
+
+    </script>
+</body>
+</html>
