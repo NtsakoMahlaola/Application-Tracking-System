@@ -16,8 +16,10 @@ def extract_text_from_pdf(pdf_path: str) -> str:
                 text += page_text + "\n"
     return text
 
+
+
 def clean_text_for_llm(text: str) -> str:
-    """Clean text for LLM processing"""
+    """Clean text for LLM input - remove excessive whitespace, anonymize contact info"""
     text = re.sub(r'\s+', ' ', text)
     text = re.sub(r'[\+\(]?[1-9][0-9 .\-\(\)]{8,}[0-9]', '[PHONE]', text)
     text = re.sub(r'\S+@\S+\.\S+', '[EMAIL]', text)
